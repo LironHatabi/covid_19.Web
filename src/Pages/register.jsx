@@ -62,7 +62,21 @@ const Register = ()=>{
     // Fixing the date that was types by the user
     const dateFix = date =>{
         if (date){
-            const dateOfBirth = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+            var Month = date.getMonth();
+            var dateStr = date.getDate();
+
+            if ((Number(date.getMonth()) + 1) < 10)
+                Month = "0" + String((Number(date.getMonth()) + 1))
+                // console.log((Number(date.getMonth()) + 1)> 10, date.getMonth());
+
+            if (Number(date.getDate()) < 10)
+                dateStr = "0" + String(date.getDate())
+
+            // const dateOfBirth = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+            const dateOfBirth = `${date.getFullYear()}-${Month}-${dateStr}`;
+
+
+            // const dateOfBirth = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
             setDayOfBirth(dateOfBirth);
         }  
     }

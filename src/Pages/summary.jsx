@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useNavigate } from "react-router-dom";
+import * as XLSX from 'xlsx'
 
 let counter = 0;
 
@@ -82,7 +83,7 @@ const Summary = () => {
 
             if ((Number(date.getMonth()) + 1) < 10)
                 Month = "0" + String((Number(date.getMonth()) + 1))
-                // console.log((Number(date.getMonth()) + 1)> 10, date.getMonth());
+            // console.log((Number(date.getMonth()) + 1)> 10, date.getMonth());
 
             if (Number(date.getDate()) < 10)
                 dateStr = "0" + String(date.getDate())
@@ -96,7 +97,7 @@ const Summary = () => {
     // Function to fix the date to send to back end
     const endtDateFix = date => {
         if (date) {
-            
+
             var Month = date.getMonth();
             var dateStr = date.getDate();
 
@@ -110,6 +111,52 @@ const Summary = () => {
             const dateOfBirth = `${date.getFullYear()}-${Month}-${dateStr}`;
             setEndDate(dateOfBirth);
         }
+    }
+
+    const checkExelDate = async (x) => {
+        if (startDate && endDate) {
+            try {
+                const res = await axios.get(`http://localhost:8080/dob?first=${startDate}&second=${endDate}`);
+                if (res.data.length > 0)
+                    exportToExcel(res.data)
+            } catch (e) {
+                setError('Could not connect to the server')
+            }
+        }
+    };
+
+    const checkExelcity = async (x) => {
+
+        if (city) {
+            try {
+                const res = await axios.get(`http://localhost:8080/city/${city}`);
+                // setrows(res.data);
+                if (res.data.length > 0)
+                    exportToExcel(res.data)
+            } catch (e) {
+                setError('Could not connect to the server')
+            }
+        }
+    };
+    const checkExelAll = async (x) => {
+
+        try {
+            const res = await axios.get('http://localhost:8080/getAll');
+            if (res.data.length > 0)
+                exportToExcel(res.data)
+        } catch (e) {
+            setError('Could not connect to the server')
+        }
+
+    };
+
+    const exportToExcel = (data) => {
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        XLSX.writeFile(workbook, 'date.xlsx');
+        setrows(data);
     }
 
     // the HTML of the summary
@@ -131,7 +178,7 @@ const Summary = () => {
                     </Button>
                 </Stack>
                 <Stack direction="row" spacing={2}>
-                    <Button href={`http://127.0.0.1:8000/cityexcel/?city=${city}`}
+                    <Button onClick={checkExelcity}
                         className='mx-2' variant="contained" disabled={!city}>
                         Print to excel
                     </Button>
@@ -179,7 +226,7 @@ const Summary = () => {
                     </Button>
                 </Stack>
                 <Stack direction="row" spacing={2}>
-                    <Button href={`http://127.0.0.1:8000/dateexcel/?first=${startDate}&second=${endDate}`}
+                    <Button onClick={checkExelDate}
                         className='mx-2' variant="contained" disabled={!startDate || !endDate}>
                         Print to excel
                     </Button>
@@ -235,7 +282,8 @@ const Summary = () => {
                     </Button>
                 </Stack>
                 <Stack direction="row" spacing={2}>
-                    <Button href='http://localhost:8000/allexport' className='mx-2' variant="contained">
+                    {/* <Button href='http://localhost:8000/allexport' className='mx-2' variant="contained"> */}
+                    <Button onClick={checkExelAll} className='mx-2' variant="contained">
                         Print full table to excel
                     </Button>
                 </Stack>
