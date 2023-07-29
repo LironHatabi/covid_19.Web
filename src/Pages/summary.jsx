@@ -83,12 +83,10 @@ const Summary = () => {
 
             if ((Number(date.getMonth()) + 1) < 10)
                 Month = "0" + String((Number(date.getMonth()) + 1))
-            // console.log((Number(date.getMonth()) + 1)> 10, date.getMonth());
 
             if (Number(date.getDate()) < 10)
                 dateStr = "0" + String(date.getDate())
 
-            // const dateOfBirth = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
             const dateOfBirth = `${date.getFullYear()}-${Month}-${dateStr}`;
             setStartDate(dateOfBirth);
         }
@@ -282,7 +280,6 @@ const Summary = () => {
                     </Button>
                 </Stack>
                 <Stack direction="row" spacing={2}>
-                    {/* <Button href='http://localhost:8000/allexport' className='mx-2' variant="contained"> */}
                     <Button onClick={checkExelAll} className='mx-2' variant="contained">
                         Print full table to excel
                     </Button>
