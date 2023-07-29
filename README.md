@@ -6,4 +6,4 @@ to run the project pls write this commenst on the terminal:
 
 this project is the front end of the covid 19 form i created
 
-by: Liron Hatabi
+by: Liron Hatabi and Ishay Post
